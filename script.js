@@ -1,81 +1,99 @@
-// Wartet, bis die komplette Webseite geladen ist
-document.addEventListener("DOMContentLoaded", () => {
-  // Holt sich die wichtigsten HTML-Elemente aus der Seite
-  const gallery = document.getElementById("photoGallery");
-  const dialog = document.getElementById("photoDialog");
-  const dialogImage = document.getElementById("dialogImage");
-  const dialogTitle = document.getElementById("dialogTitle");
-  const imageIndex = document.getElementById("imageIndex");
-  const closeDialogBtn = document.getElementById("closeDialogBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const prevBtn = document.getElementById("prevBtn");
+// Dialog für großes Bild
+let photoDialog = document.getElementById("photo-dialog");
 
-  const photoCount = 12; // Anzahl der Bilder in der Galerie
-  let currentIndex = 0; // Aktuell angezeigtes Bild im Dialog
-  let images = []; // Hier werden alle Bild-Elemente gespeichert
+// Galerie-Container
+let gallery = document.getElementById("photoGallery");
 
-  // Öffnet den Bild-Dialog und zeigt das gewählte Bild an
-  const openDialog = (i) => {
-    currentIndex = i;
-    updateDialog(currentIndex); // Aktualisiert Bild und Infos
-    dialog.showModal(); // Öffnet den Dialog
-  };
+// Bilderliste
+let photos = [
+  { src: "./img/photo1.png" },
+  { src: "./img/photo2.png" },
+  { src: "./img/photo3.png" },
+  { src: "./img/photo4.png" },
+  { src: "./img/photo5.png" },
+  { src: "./img/photo6.png" },
+  { src: "./img/photo7.png" },
+  { src: "./img/photo8.png" },
+  { src: "./img/photo9.png" },
+  { src: "./img/photo10.png" },
+  { src: "./img/photo11.png" },
+  { src: "./img/photo12.png" }
+];
 
-  // Zeigt das Bild, den Titel und den Index im Dialog an
-  const updateDialog = (i) => {
-    const img = images[i];
-    dialogImage.src = img.src; // Setzt das Bild
-    dialogTitle.textContent = img.alt || `Foto ${i + 1}`; // Setzt den Titel
-    imageIndex.textContent = `${i + 1}/${images.length}`; // Zeigt aktuelle Bildnummer
-  };
+// Aktuelles Bild
+let currentIndex = 0;
 
-  // Wechselt zum nächsten oder vorherigen Bild
-  const changeImage = (dir) => {
-    currentIndex = (currentIndex + dir + images.length) % images.length;
-    updateDialog(currentIndex); // Zeigt das neue Bild an
-  };
+// Bilder anzeigen
+function render() {
+  gallery.innerHTML = "";
+  for (let i = 0; i < photos.length; i++) {
+    gallery.innerHTML += getNotesHtml(photos[i], i);
+  }
+}
 
-  // Baut die Galerie mit den Bildern auf
-  const renderGallery = (count) => {
-    gallery.innerHTML = ""; // Leert die Galerie zuerst
-    for (let i = 1; i <= count; i++) {
-      const img = document.createElement("img"); // Erstellt ein neues Bild
-      img.src = `./img/photo${i}.png`; // Bildquelle
-      img.alt = `Photo ${i}`; // Alternativtext
-      img.className = "photo-item";
-      img.addEventListener("click", () => openDialog(i - 1)); // Öffnet Dialog bei Klick
+// HTML für ein Bild
+function getNotesHtml(photo, index) {
+  return `
+    <div class="photo-item">
+      <img src="${photo.src}" />
+      <button class="info-button" data-index="${index}">ℹ️</button>
+    </div>`;
+}
 
-      const div = document.createElement("div"); // Hülle um das Bild
-      div.className = "photo-item";
-      div.appendChild(img);
-      gallery.appendChild(div); // Fügt das Bild zur Galerie hinzu
-    }
-    images = gallery.querySelectorAll("img"); // Speichert alle Bilder in der Galerie
-  };
+// Klick auf Galerie
+gallery.addEventListener("click", (event) => {
+  // Info-Button
+  if (event.target.classList.contains("info-button")) {
+    event.stopPropagation();
+    const index = parseInt(event.target.dataset.index);
+    alert(`Info zu Bild ${index + 1}`);
+    return;
+  }
 
-  // Startet die Galerie beim Laden der Seite
-  renderGallery(photoCount);
-
-  // Wenn „Weiter“-Button geklickt wird → nächstes Bild
-  nextBtn.addEventListener("click", () => changeImage(1));
-
-  // Wenn „Zurück“-Button geklickt wird → vorheriges Bild
-  prevBtn.addEventListener("click", () => changeImage(-1));
-
-  // Schließt den Dialog beim Klick auf den „Schließen“-Button
-  closeDialogBtn.addEventListener("click", () => dialog.close());
-
-  // Wenn man außerhalb des Dialogfensters klickt → Dialog schließen
-  dialog.addEventListener("click", (e) => {
-    const r = dialog.getBoundingClientRect();
-    if (
-      e.clientX < r.left || e.clientX > r.right ||
-      e.clientY < r.top || e.clientY > r.bottom
-    ) dialog.close();
-  });
-
-  // Wenn die „Escape“-Taste gedrückt wird → Dialog schließen
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && dialog.open) dialog.close();
-  });
+  // Bild öffnen
+  if (event.target.tagName === "IMG") {
+    const allImages = gallery.querySelectorAll("img");
+    const index = Array.from(allImages).indexOf(event.target);
+    openDialog(index);
+  }
 });
+
+// Dialog öffnen
+function openDialog(index) {
+  currentIndex = index;
+  dialogImage.src = photos[index].src;
+  imageIndex.textContent = `${index + 1}/${photos.length}`;
+  photoDialog.showModal();
+}
+
+// Dialog schließen
+function closeDialog() {
+  photoDialog.close();
+}
+
+// Vorheriges Bild
+function showPrev() {
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  openDialog(currentIndex);
+}
+
+// Nächstes Bild
+function showNext() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  openDialog(currentIndex);
+}
+
+// Buttons & Tasten
+closeDialogBtn.addEventListener("click", closeDialog);
+prevBtn.addEventListener("click", showPrev);
+nextBtn.addEventListener("click", showNext);
+
+// ESC schließt Dialog
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeDialog();
+  }
+});
+
+// Start
+render();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,34 +8,37 @@
     <script src="script.js" defer></script>
     <link rel="icon" href="./img/favicon.svg" type="image/x-icon" />
   </head>
-  <body>
+  <body onload="render()">
     <section class="header-content">
       <header>
-        <img src="./img/Fotogram_Logo.svg" alt="Fotogram_Logo" />
+        <img src="./img/Fotogram_Logo.svg" alt="Fotogramm Logo" />
       </header>
     </section>
+
     <main>
       <section id="gallery">
-        <h1>Your Personal photo album</h1>
         <div id="photoGallery"></div>
       </section>
     </main>
+
     <footer>
-      <img src="./img/Fotogram_Logo.svg" alt="Fotogram_Logo" />
-      <p>&copy; 2025 Fotogramm. All rights reserved.</p>
+      <img src="./img/Fotogram_Logo.svg" alt="Fotogramm Logo" />
+      <p>&copy; 2025 Fotogramm. Alle Rechte vorbehalten.</p>
       <a href="impressum.html">Impressum</a>
     </footer>
-    <dialog id="photoDialog">
-      <div class="dialog-header">
-        <span id="dialogTitle">Bildtitel</span>
-        <button id="closeDialogBtn">&times;</button>
-      </div>
-      <img id="dialogImage" src="" alt="Vergrößertes Bild" />
-      <div class="dialog-controls">
-        <button id="prevBtn">&#10094;</button>
-        <span id="imageIndex">1/12</span>
-        <button id="nextBtn">&#10095;</button>
-      </div>
-    </dialog>
+
+    <!-- Dialog für vergrößertes Bild -->
+    <dialog id="photo-dialog">
+  <div class="dialog-header">
+    <button id="closeDialogBtn">&times;</button>
+  </div>
+  <img id="dialogImage" />
+  <div class="dialog-controls">
+    <button id="prevBtn">&#10094;</button>
+    <span id="imageIndex">1/12</span>
+    <button id="nextBtn">&#10095;</button>
+  </div>
+</dialog>
+
   </body>
 </html>
