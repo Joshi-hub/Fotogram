@@ -1,6 +1,11 @@
 let photoDialog = document.getElementById("photo-dialog");
 let gallery = document.getElementById("photoGallery");
-photos = [
+let dialogImage = document.getElementById("dialogImage");
+let imageIndex = document.getElementById("imageIndex");
+
+let currentIndex = 0;
+
+let photos = [
   { src: "./img/photo1.png" },
   { src: "./img/photo2.png" },
   { src: "./img/photo3.png" },
@@ -16,35 +21,15 @@ photos = [
 ];
 
 function render() {
-  gallery.innerHTML = ""; 
+  gallery.innerHTML = "";
 
   for (let i = 0; i < photos.length; i++) {
-    gallery.innerHTML += createPhotoHtml(photos[i]);
+    gallery.innerHTML += `
+      <div class="photo-item">
+        <img src="${photos[i].src}" alt="Foto ${i + 1}" onclick="openDialog(${i})" />
+      </div>`;
   }
 }
-
-function createPhotoHtml(photo) {
-  return `
-    <div class="photo-item">
-      <img src="${photo.src}" />
-    </div>`;
-}
-
-gallery.addEventListener("click", (event) => {
-  if (event.target.classList.contains("image-button")) {
-    event.stopPropagation();
-    return;
-  }
-
-
-  if (event.target.tagName === "IMG") {
-    event.stopPropagation();
-    
-    const allImages = gallery.querySelectorAll("img");
-    const index = Array.from(allImages).indexOf(event.target);
-    openDialog(index);
-  }
-});
 
 function openDialog(index) {
   currentIndex = index;
@@ -67,16 +52,14 @@ function showNext() {
   openDialog(currentIndex);
 }
 
-photoDialog.addEventListener("click", (event) => {
-  if (event.target === photoDialog) {
-    closeDialog();
-  }
-});
-
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeDialog();
   }
 });
 
-render();
+photoDialog.addEventListener("click", (event) => {
+  if (event.target === photoDialog) {
+    closeDialog();
+  }
+});
