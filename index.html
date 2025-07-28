@@ -17,28 +17,28 @@
 
     <main>
       <section id="gallery">
+         <h1>Your Personal photo album</h1>
         <div id="photoGallery"></div>
       </section>
     </main>
 
-    <footer>
+    <dialog id="photo-dialog">
+  <div class="dialog-header">
+    <button id="closeDialogBtn" onclick="closeDialog()">&times;</button>
+  </div>
+  <img id="dialogImage" />
+  <div class="dialog-controls">
+    <button id="prevBtn" onclick="showPrev()">&#10094;</button>
+    <span id="imageIndex">1/12</span>
+    <button id="nextBtn" onclick="showNext()">&#10095;</button>
+  </div>
+</dialog>
+
+<footer>
       <img src="./img/Fotogram_Logo.svg" alt="Fotogramm Logo" />
       <p>&copy; 2025 Fotogramm. Alle Rechte vorbehalten.</p>
       <a href="impressum.html">Impressum</a>
     </footer>
-
-    <!-- Dialog für vergrößertes Bild -->
-    <dialog id="photo-dialog">
-  <div class="dialog-header">
-    <button id="closeDialogBtn">&times;</button>
-  </div>
-  <img id="dialogImage" />
-  <div class="dialog-controls">
-    <button id="prevBtn">&#10094;</button>
-    <span id="imageIndex">1/12</span>
-    <button id="nextBtn">&#10095;</button>
-  </div>
-</dialog>
 
   </body>
 </html>

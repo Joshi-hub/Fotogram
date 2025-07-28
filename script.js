@@ -1,11 +1,6 @@
-// Dialogfenster für großes Bild
 let photoDialog = document.getElementById("photo-dialog");
-
-// Bereich, in dem die Bilder angezeigt werden
 let gallery = document.getElementById("photoGallery");
-
-// Liste mit Bildpfaden
-let photos = [
+photos = [
   { src: "./img/photo1.png" },
   { src: "./img/photo2.png" },
   { src: "./img/photo3.png" },
@@ -20,55 +15,37 @@ let photos = [
   { src: "./img/photo12.png" }
 ];
 
-// Aktuell angezeigtes Bild im Dialog
-let currendIndex = 0;
-
-// Funktion zeigt alle Bilder in der Galerie an
 function render() {
-  gallery.innerHTML = ""; // vorher leeren
+  gallery.innerHTML = ""; 
 
   for (let i = 0; i < photos.length; i++) {
-    gallery.innerHTML += getNotesHtml(photos[i]); // jedes Bild einfügen
+    gallery.innerHTML += createPhotoHtml(photos[i]);
   }
 }
 
-// Gibt HTML für ein einzelnes Bild zurück
-function getNotesHtml(photo) {
+function createPhotoHtml(photo) {
   return `
     <div class="photo-item">
       <img src="${photo.src}" />
     </div>`;
 }
 
-// Öffnet oder schließt ein Overlay (nicht im restlichen Code benutzt)
-function toggleoverlay(i) {
-  if (overlayRef.classList.contains("d-none")) {
-    overlayImage.src = photos[i].src;
-    overlayRef.classList.remove("d-none");
-  } else {
-    overlayRef.classList.add("d-none");
-  }
-}
-
-// Klick in die Galerie
 gallery.addEventListener("click", (event) => {
-  // Wenn Info-Button geklickt wurde
-  if (event.target.classList.contains("info-button")) {
-    event.stopPropagation(); // verhindert weiteren Klick
-    const index = parseInt(event.target.dataset.index);
-    alert(`Info zu Bild ${index + 1}`);
+  if (event.target.classList.contains("image-button")) {
+    event.stopPropagation();
     return;
   }
 
-  // Wenn ein Bild geklickt wurde
+
   if (event.target.tagName === "IMG") {
-    const allImages = gallery.querySelectorAll("img"); // alle Bilder holen
-    const index = Array.from(allImages).indexOf(event.target); // geklicktes Bild finden
-    openDialog(index); // Dialog öffnen
+    event.stopPropagation();
+    
+    const allImages = gallery.querySelectorAll("img");
+    const index = Array.from(allImages).indexOf(event.target);
+    openDialog(index);
   }
 });
 
-// Öffnet das Dialogfenster mit dem gewählten Bild
 function openDialog(index) {
   currentIndex = index;
   dialogImage.src = photos[index].src;
@@ -76,38 +53,30 @@ function openDialog(index) {
   photoDialog.showModal();
 }
 
-// Schließt das Dialogfenster
 function closeDialog() {
   photoDialog.close();
 }
 
-// Zeigt vorheriges Bild
 function showPrev() {
   currentIndex = (currentIndex - 1 + photos.length) % photos.length;
   openDialog(currentIndex);
 }
 
-// Zeigt nächstes Bild
 function showNext() {
   currentIndex = (currentIndex + 1) % photos.length;
   openDialog(currentIndex);
 }
 
-// Klick auf Schließen-Button im Dialog
-closeDialogBtn.addEventListener("click", closeDialog);
+photoDialog.addEventListener("click", (event) => {
+  if (event.target === photoDialog) {
+    closeDialog();
+  }
+});
 
-// Klick auf "Zurück"-Button
-prevBtn.addEventListener("click", showPrev);
-
-// Klick auf "Weiter"-Button
-nextBtn.addEventListener("click", showNext);
-
-// ESC-Taste schließt den Dialog
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeDialog();
   }
 });
 
-// Galerie beim Laden anzeigen
 render();
