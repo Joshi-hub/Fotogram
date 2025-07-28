@@ -32,7 +32,6 @@ function render() {
 }
 
 function openDialog(index) {
-  currentIndex = index;
   dialogImage.src = photos[index].src;
   imageIndex.textContent = `${index + 1}/${photos.length}`;
   photoDialog.showModal();
